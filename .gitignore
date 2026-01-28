@@ -416,3 +416,16 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# CMake build directory
+build/
+cmake-build-*/
+
+# Web UI
+web-ui/node_modules/
+Resources/WebUI/*
+!Resources/WebUI/.gitkeep
+
+# OS
+.DS_Store
+Thumbs.db
