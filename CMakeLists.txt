@@ -100,28 +100,14 @@ else()
     target_compile_definitions(${PROJECT_NAME} PUBLIC BEATCONNECT_ACTIVATION_ENABLED=0)
 endif()
 
-# Web UI resources (when not in dev mode)
-if(NOT OXIDE_DEV_MODE)
-    if(EXISTS "${CMAKE_SOURCE_DIR}/Resources/WebUI/index.html")
-        juce_add_binary_data(${PROJECT_NAME}_WebUI
-            HEADER_NAME "WebUIData.h"
-            NAMESPACE WebUIData
-            SOURCES
-                Resources/WebUI/index.html
-        )
-
-        # Find and add all assets
-        file(GLOB_RECURSE WEB_ASSETS "${CMAKE_SOURCE_DIR}/Resources/WebUI/assets/*")
-        if(WEB_ASSETS)
-            target_sources(${PROJECT_NAME}_WebUI PRIVATE ${WEB_ASSETS})
-        endif()
-
-        target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}_WebUI)
-        target_compile_definitions(${PROJECT_NAME} PUBLIC HAS_WEB_UI_DATA=1)
-    else()
-        message(WARNING "WebUI not found. Run 'npm run build' in web-ui/ first.")
-        target_compile_definitions(${PROJECT_NAME} PUBLIC HAS_WEB_UI_DATA=0)
-    endif()
-else()
-    target_compile_definitions(${PROJECT_NAME} PUBLIC HAS_WEB_UI_DATA=0)
-endif()
+# Copy WebUI resources to build output (like Drift does)
+add_custom_target(${PROJECT_NAME}_CopyWebUI ALL
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/Resources/WebUI
+    ${CMAKE_BINARY_DIR}/${PROJECT_NAME}_artefacts/$<CONFIG>/Standalone/WebUI
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/Resources/WebUI
+    ${CMAKE_BINARY_DIR}/${PROJECT_NAME}_artefacts/$<CONFIG>/Standalone/Resources/WebUI
+    COMMENT "Copying WebUI resources to Standalone..."
+)
+add_dependencies(${PROJECT_NAME}_Standalone ${PROJECT_NAME}_CopyWebUI)

@@ -165,8 +165,8 @@ void OxideAudioProcessorEditor::setupWebView()
     addAndMakeVisible(*webView);
 
 #if OXIDE_DEV_MODE
-    webView->goToURL("http://localhost:5173");
-    DBG("Loading dev server at localhost:5173");
+    webView->goToURL("http://127.0.0.1:5173");
+    DBG("Loading dev server at 127.0.0.1:5173");
 #else
     webView->goToURL(webView->getResourceProviderRoot());
     DBG("Loading from resource provider");
