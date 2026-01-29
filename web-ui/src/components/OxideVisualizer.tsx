@@ -23,7 +23,6 @@ export function OxideVisualizer({ mode, degradation }: OxideVisualizerProps) {
   const visualizerData = useVisualizerData();
   const animationRef = useRef<number>();
   const timeRef = useRef(0);
-  const pixelBuffer = useRef<ImageData | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
